@@ -28,7 +28,7 @@ class DaysService {
     const newDay = AppState.days.find(day => day.id == dayId)
     AppState.activeDay = newDay
     AppState.mealEntries = newDay.mealEntries
-    logger.log(newDay)
+    logger.log('new day', newDay)
   }
 }
 
