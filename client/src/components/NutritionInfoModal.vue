@@ -1,5 +1,6 @@
 <script setup>
 import { AppState } from '@/AppState.js';
+import { accountService } from '@/services/AccountService.js';
 import { mealsService } from '@/services/MealsService.js';
 import { logger } from '@/utils/Logger.js';
 import { Pop } from '@/utils/Pop.js';
@@ -30,11 +31,41 @@ function resetServingSize() {
 }
 
 
+async function addFoodToFavorites(food) {
+  try {
+    // if (!food.unit) {
+    //   await mealsService.addMealToDay({
+    //     ...food,
+    //     spoonacularMealId: food.id,
+    //     servings: serving.value,
+    //     isRecipe: food.isRecipe
+    //   })
+    // }
+    await mealsService.addFoodToFavorites({ ...food, spoonacularMealId: food.spoonacularMealId, servings: serving.value, unit: food.theUnit, calorieCount: food.calories.amount })
+    // Modal.getOrCreateInstance('#NutritionInfoModal').hide()
+    Pop.success(`You successfully added ${food.name} to your favorites!`)
+
+  }
+  catch (error) {
+    Pop.error(error, 'could not favorite this food');
+    logger.log('could not favorite food', error)
+  }
+}
 
 async function addFoodToDay(food) {
   try {
-
-    await mealsService.addMealToDay({ ...food, spoonacularMealId: food.id, servings: serving.value, unit: food.theUnit })
+    if (!food.unit) {
+      await mealsService.addMealToDay({
+        ...food,
+        spoonacularMealId: food.id,
+        servings: serving.value,
+        isRecipe: food.isRecipe
+      })
+    }
+    else {
+      await mealsService.addMealToDay({ ...food, spoonacularMealId: food.id, servings: serving.value, unit: food.theUnit })
+    }
+    // Modal.getOrCreateInstance('#NutritionInfoModal').hide()
     Pop.success(`You successfully added ${food.name} to your calorie count!`)
   }
   catch (error) {
@@ -49,33 +80,33 @@ async function addFoodToDay(food) {
 <template>
   <!-- inert? -->
   <div class="modal fade" id="NutritionInfoModal" tabindex="-1" aria-labelledby="NutritionInfoModalLabel"
-       aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog">
       <div v-if="food" class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5 text-capitalize text-primary fw-bold" id="NutritionInfoModalLabel">{{ food.name }}
           </h1>
           <button @click="resetServingSize()" type="button" class="btn-close" data-bs-dismiss="modal"
-                  aria-label="Close"></button>
+            aria-label="Close"></button>
         </div>
         <div class="modal-body pt-0">
           <div class="text-center my-5">
             <img class="shadow rounded-5 img-fluid" :src="food.medImageURL" :alt="food.name"
-                 onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/b/b8/Placeholder-image.png?20150323180114'">
+              onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/b/b8/Placeholder-image.png?20150323180114'">
           </div>
           <div class="fs-4 text-dark">
             <div
-                 class="d-flex justify-content-between rounded text-capitalize rounded border-primary text-primary fw-bold">
+              class="d-flex justify-content-between rounded text-capitalize rounded border-primary text-primary fw-bold">
               <p v-if="food.unitLong">{{ food.unitLong
-              }}(s)
+              }}<span class="text-lowercase">(s)</span>
               </p>
-              <p v-else>{{ food.theUnit || 'Serving(s)' }}</p>
+              <p v-else>{{ food.theUnit || 'Serving' }} <span class="text-lowercase">(s)</span></p>
               <div class="d-flex gap-2">
                 <span @click="decreaseServingSize()" type="button" title="decrease serving"
-                      class="mdi mdi-minus-circle"></span>
+                  class="mdi mdi-minus-circle"></span>
                 <p>{{ serving }}</p>
                 <span @click="increaseServingSize()" type="button" title="increase serving"
-                      class="mdi mdi-plus-circle"></span>
+                  class="mdi mdi-plus-circle"></span>
               </div>
             </div>
             <p v-if="food.calories && food.calories.amount > 1" class="border border-primary rounded ps-2">
@@ -134,18 +165,24 @@ async function addFoodToDay(food) {
               {{ food.cholesterol.unit }}
             </p>
           </div>
+          <div class="text-end">
+            <button @click="addFoodToDay(food)" type="button" class="btn btn-primary text-light text-shadow">Log
+              Food</button>
+          </div>
         </div>
-        <div class="modal-footer">
 
-          <button @click="addFoodToDay(food)" type="button" class="btn btn-primary text-light text-shadow">Log
+        <div class="modal-footer d-flex justify-content-between">
+          <button @click="addFoodToFavorites(food)" type="button"
+            class="btn btn-primary mdi mdi-heart">Favorite</button>
+          <button @click="addFoodToDay(food)" type="button" class="btn btn-primary">Log
             Food</button>
         </div>
+
       </div>
       <div v-else class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="NutritionInfoModalLabel"></h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
         </div>
         <div class="modal-body">
           <div class="text-center my-5 display-5">
@@ -154,10 +191,6 @@ async function addFoodToDay(food) {
           </div>
         </div>
       </div>
-      <!-- <div v-else>
-        <span>Loading</span>
-        <span class="mdi mdi-loading mdi-spin"></span>
-      </div> -->
     </div>
   </div>
 </template>

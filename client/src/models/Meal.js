@@ -6,6 +6,7 @@ export class Meal {
     this.name = data.name || data.title
     this.image = data.image
     this.possibleUnits = data.possibleUnits
+    this.isRecipe = data.isRecipe
     // this.calories = data.nutrition.nutrients.amount
 
   }
@@ -43,6 +44,7 @@ export class Meal {
 export class ActiveMeal extends Meal {
   constructor(data) {
     super(data)
+    this.spoonacularMealId = data.id
     this.category = data.categoryPath
     this.calories = data.nutrition.nutrients.find(object => object.name == 'Calories')
     this.carbohydrates = data.nutrition.nutrients.find(object => object.name == 'Carbohydrates')
@@ -66,4 +68,5 @@ export class Recipe extends ActiveMeal {
     this.sourceName = data.sourceName
     this.sourceUrl = data.sourceUrl
   }
+  isRecipe = true
 }

@@ -6,9 +6,10 @@ import { logger } from '@/utils/Logger.js';
 import { daysService } from '@/services/DaysService.js';
 import { mealsService } from '@/services/MealsService.js';
 import MealEntryModal from '@/components/MealEntryModal.vue';
+import SearchedFood from '@/components/SearchedFood.vue';
+import { FavoriteMeal } from '@/models/FavoriteMeal.js';
+import FavoriteMeals from '@/components/FavoriteMealCard.vue';
 import FavoriteMealCard from '@/components/FavoriteMealCard.vue';
-import DoughnutChart from '@/components/CalorieChart.vue';
-import CalorieChart from '@/components/CalorieChart.vue';
 
 const account = computed(() => AppState.account)
 const activeDay = computed(() => AppState.activeDay)
@@ -75,6 +76,7 @@ async function getDetailsById(mealEntry) {
   }
 }
 
+
 async function getFavoriteMeals() {
   try {
     await mealsService.getFavoriteMeals()
@@ -82,6 +84,7 @@ async function getFavoriteMeals() {
   catch (error) {
     Pop.error(error, 'could not get favorite meals');
     logger.error('could not get favorite meals'.toUpperCase(), error)
+
   }
 }
 </script>
@@ -177,14 +180,9 @@ async function getFavoriteMeals() {
       Saved meals
     </h1>
     <div class="row">
-
-
       <div v-for="meal in favoriteMeals" :key="meal.id" class="col-12 col-sm-6 col-md-6 col-lg-4 col-xl-3">
-
-        <FavoriteMealCard :meals="meal" />
-
+        <FavoriteMealCard :meal="meal" />
       </div>
-
     </div>
   </section>
   <MealEntryModal />
