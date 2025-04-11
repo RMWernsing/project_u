@@ -1,5 +1,6 @@
 <script setup>
 import { AppState } from '@/AppState.js';
+import FoodSnippet from '@/components/FoodSnippet.vue';
 import NutritionInfoModal from '@/components/NutritionInfoModal.vue';
 import SearchedFood from '@/components/SearchedFood.vue';
 import { mealsService } from '@/services/MealsService.js';
@@ -68,46 +69,39 @@ function resetSearchResults() {
 </script>
 
 <template>
-  <div class="row">
-    <div class="form-area d-flex flex-column justify-content-center align-items-center shadow p-4"
-         :style="{ backgroundImage: `url(${searchBackground})` }">
+  <div class="form-area d-flex flex-column justify-content-center align-items-center shadow p-4"
+       :style="{ backgroundImage: `url(${searchBackground})` }">
 
-      <form @submit.prevent="getItemsByQuery()" class="mx-3 w-100">
-        <div class="form-floating mb-3 input-group text-center text-dark">
-          <input v-model="editableSearchData" type="text" class="form-control rounded-start" id="floatingInput">
-          <label v-if="activeSearchOption == 'food'" for="floatingInput" class="text-primary fw-bold fs-5">Search for
-            food</label>
-          <label v-else-if="activeSearchOption == 'recipes'" for="floatingInput"
-                 class="text-primary fw-bold fs-5">Search
-            for recipes</label>
-          <label v-else-if="activeSearchOption == 'exercises'" for="floatingInput"
-                 class="text-primary fw-bold fs-5">Search
-            for exercises</label>
-          <button class="btn btn-grey text-light text-shadow" type="submit" :title="`Search for ${activeSearchOption}`">
-            Search
-          </button>
-        </div>
-      </form>
-      <div class="mt-2">
-        <RouterLink :to="{ query: { type: 'food' } }">
-          <button @click="setActiveSearchOption('food')"
-                  :class="`btn btn-grey text-shadow text-light me-2 ${route.query.type == 'food' ? 'border-bottom border-primary border-3' : ''}`"
-                  type="button">Food</button>
-        </RouterLink>
-        <RouterLink :to="{ query: { type: 'recipes' } }">
-          <button @click="setActiveSearchOption('recipes')"
-                  :class="`btn btn-grey text-shadow text-light me-2 ${route.query.type == 'recipes' ? 'border-bottom border-primary border-3' : ''}`"
-                  type="button">Recipes</button>
-        </RouterLink>
+    <form @submit.prevent="getItemsByQuery()" class="mx-3 w-100">
+      <div class="form-floating mb-3 input-group text-center text-dark">
+        <input v-model="editableSearchData" type="text" class="form-control rounded-start" id="floatingInput">
+        <label v-if="activeSearchOption == 'food'" for="floatingInput" class="text-primary fw-bold fs-5">Search for
+          food</label>
+        <label v-else-if="activeSearchOption == 'recipes'" for="floatingInput" class="text-primary fw-bold fs-5">Search
+          for recipes</label>
+        <label v-else-if="activeSearchOption == 'exercises'" for="floatingInput"
+               class="text-primary fw-bold fs-5">Search
+          for exercises</label>
+        <button class="btn btn-grey text-light text-shadow" type="submit" :title="`Search for ${activeSearchOption}`">
+          Search
+        </button>
       </div>
+    </form>
+    <div class="mt-2">
+      <RouterLink :to="{ query: { type: 'food' } }">
+        <button @click="setActiveSearchOption('food')"
+                :class="`btn btn-grey text-shadow text-light me-2 ${route.query.type == 'food' ? 'border-bottom border-primary border-3' : ''}`"
+                type="button">Food</button>
+      </RouterLink>
+      <RouterLink :to="{ query: { type: 'recipes' } }">
+        <button @click="setActiveSearchOption('recipes')"
+                :class="`btn btn-grey text-shadow text-light me-2 ${route.query.type == 'recipes' ? 'border-bottom border-primary border-3' : ''}`"
+                type="button">Recipes</button>
+      </RouterLink>
     </div>
   </div>
-  <section class="container-fluid">
-    <div class="row">
-    </div>
-  </section>
-  <section class="container mt-3">
-    <div class="row mt-2">
+  <section class="container">
+    <div class="row mt-4">
       <div v-if="foods.length > 0" class="col-12">
         <div class="d-flex gap-2 align-items-center mb-1
         ">
@@ -122,6 +116,7 @@ function resetSearchResults() {
       </div>
     </div>
   </section>
+  <FoodSnippet />
   <NutritionInfoModal />
 
 </template>
@@ -129,7 +124,7 @@ function resetSearchResults() {
 <style scoped lang="scss">
 .form-area {
   min-height: 50dvh;
-  width: 120%;
+  width: 100dvw;
   background-size: cover;
   background-position: 15% 85%;
 }
@@ -142,7 +137,7 @@ function resetSearchResults() {
 @media screen and (max-width: 576px) {
   .form-area {
     min-height: 25dvh;
-    background-position: center;
+    background-position: 30% 70%;
   }
 
   .input-group {

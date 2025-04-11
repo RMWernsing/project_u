@@ -4,15 +4,15 @@
 
 
 <template>
-  <section class="container-fluid">
+  <section class="container-fluid bg-white">
     <hr>
     <div class="row justify-content-between pb-5">
       <div class="col-1">
         <span class="mdi mdi-arm-flex display-4 text-start text-primary"></span>
       </div>
-      <div class="col-lg-3 col-md-4 col-6">
+      <div class="col-8">
         <p class="fs-4 fw-bold">
-          Our mission is to make the world a healthier place
+          Our mission is to make the world a healthier place.
         </p>
         <p class="gray-text">
           Want to learn more? Visit our about page!
