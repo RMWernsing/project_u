@@ -2,6 +2,7 @@
 import { AppState } from '@/AppState.js';
 import FoodSnippet from '@/components/FoodSnippet.vue';
 import NutritionInfoModal from '@/components/NutritionInfoModal.vue';
+import ScrollButton from '@/components/ScrollButton.vue';
 import SearchedFood from '@/components/SearchedFood.vue';
 import { mealsService } from '@/services/MealsService.js';
 import { logger } from '@/utils/Logger.js';
@@ -100,6 +101,7 @@ function resetSearchResults() {
       </RouterLink>
     </div>
   </div>
+  <ScrollButton />
   <section class="container">
     <div class="row mt-4">
       <div v-if="foods.length > 0" class="col-12">
@@ -116,7 +118,8 @@ function resetSearchResults() {
       </div>
     </div>
   </section>
-  <FoodSnippet />
+  <!-- <FoodSnippet /> -->
+
   <NutritionInfoModal />
 
 </template>

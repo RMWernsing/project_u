@@ -8,6 +8,7 @@ import { computed, onMounted } from 'vue';
 const randomNum = computed(() => Math.round(Math.random()))
 const snippet = computed(() => AppState.snippet)
 
+
 onMounted(() => {
   getFoodSnippet()
 })
@@ -18,7 +19,9 @@ async function getFoodSnippet() {
       await foodSnippetsService.getRandomJoke()
       return
     }
-    await foodSnippetsService.getRandomFact()
+    else if (randomNum.value == 1) {
+      await foodSnippetsService.getRandomFact()
+    }
   }
   catch (error) {
     Pop.error(error, 'Could not get food fact or joke');
@@ -30,8 +33,8 @@ async function getFoodSnippet() {
 
 
 <template>
-  <div v-if="snippet" class="bg-primary text-light fw-bold text-center py-3 mb-1">
-    <h3 class="fs-2 fw-bold text-shadow">{{ randomNum == 0 ? 'Fun Food Joke' : 'Fun Food Fact' }}</h3>
+  <div v-if="snippet" class="bg-primary text-light fw-bold py-3 mb-1 d-flex flex-column justify-content-center">
+    <h3 class="fs-2 fw-bold text-shadow text-center">{{ randomNum == 0 ? 'Fun Food Fact' : 'Fun Food Joke' }}</h3>
     <p class="mb-0 fs-3 text-shadow">
       {{ snippet.text }}
     </p>
@@ -39,4 +42,9 @@ async function getFoodSnippet() {
 </template>
 
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+p {
+  margin: auto;
+  max-width: 80%;
+}
+</style>
